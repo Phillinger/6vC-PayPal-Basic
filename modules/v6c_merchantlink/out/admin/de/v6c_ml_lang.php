@@ -7,16 +7,16 @@ $aLang = array(
 'charset'                                   			=> 'ISO-8859-15',
 
 // Menu & tab titles
-'v6cmods'    							=> '6vC Einstellungen',
-'v6c_merchantlink'    						=> 'Händleranbindung',
+'v6cmods'    							=> '6vC PayPal-Modul',
+'v6c_merchantlink'    						=> 'PayPal Einstellungen',
 'v6c_merchantlink_main'						=> 'PayPal',
 'V6C_MENUITEM'    						=> '6vC Extensions',
-'V6C_MENUSUBITEM_MERCHLNK'    					=> 'Händleranbindung',
+'V6C_MENUSUBITEM_MERCHLNK'    					=> 'PayPal Einstellungen',
 
 // Configuration parameter descriptions and help content
 'V6C_INSTALL'							=> 'Installation/Update',
 'V6C_INSTLMERCKLNK'						=> 'Aktualisiert den Shop, um dieses Modul verwenden zu können. Immer auf Admin> Service> Tools> Views jetzt updaten klicken, nachdem diese Aktion ausgeführt wurde.',
-'V6C_HELP_INSTLMERCKLNK'					=> 'Wenn dieser Button aktiv ist, ist eine Aktualisierung erforderlich. Ansonsten ist Shop bereits up-to-date.',
+'V6C_HELP_INSTLMERCKLNK'					=> 'Wenn dieser Button aktiv ist, ist eine Aktualisierung erforderlich. Ansonsten ist der Shop bereits up-to-date.',
 'V6C_ORDERFOLDER_PENDING'					=> 'Schwebend',
 'V6C_COMPACTCHKOUT'    						=> 'Zurück zu Schritt 4 erforderlich für die Bearbeitung bei verlinkter Händler-Website.',
 'V6C_HELP_COMPACTCHKOUT'    					=> 'Diese Aktivierung wird die Bestellübersicht des Schrittes 4 in Schritt 3 platzieren. So kann in Schritt 4 die Offsite-Verarbeitung stattfinden. Wenn Sie Zahlungsarten mit Aufschlägen verwenden MÜSSEN Sie die Zahlungsart oxempty aktivieren und als Standard festlegen.',
