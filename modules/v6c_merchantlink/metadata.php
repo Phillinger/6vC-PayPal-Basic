@@ -29,10 +29,10 @@ $sMetadataVersion = '1.0';
  */
 $aModule = array(
     'id'	            => 'v6c_merchantlink',
-    'title'             => '6vC MerchantLink',
-    'description'       => 'Module for interfacing with merchant gateways.',
+    'title'             => '6vC PayPal',
+    'description'       => 'Module for interfacing with PayPal-Gateway.',
     'thumbnail'         => 'logo-sqr.png',
-    'version'           => '1.1.3',
+    'version'           => '1.2.0',
     'author'            => '6vCommerce',
     'url'		        => 'http://www.6vcommerce.ca',
     'email'				=> 'info@6vcommerce.ca',
