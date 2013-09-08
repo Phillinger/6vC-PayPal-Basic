@@ -314,14 +314,15 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
             $aQuery['CURRENCYCODE'] = $this->getConfig()->getActShopCurrencyObject()->name;
             $aQuery['NOSHIPPING'] = 1;
             $aQuery['ADDROVERRIDE'] = 1;
-            
+            $aQuery['HDRIMG'] =  $this->getConfig()->getConfigParam('v6c_Logourl');
+                        
             if ($this->getConfig()->getConfigParam('v6c_Allnote'))
             {$aQuery['ALLOWNOTE'] = 1;}
             else
             {$aQuery['ALLOWNOTE'] = 0;}
             
-            $aQuery['SOLUTIONTYPE'] ='Sole';  
-            
+            $aQuery['SOLUTIONTYPE'] ='Sole';
+
             if ($this->getConfig()->getConfigParam('v6c_Brandname'))
             {$aQuery['BRANDNAME'] = oxConfig::getInstance()->getActiveShop()->oxshops__oxcompany->value; }          
             else

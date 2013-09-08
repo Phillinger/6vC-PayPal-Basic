@@ -198,7 +198,16 @@
          </td>
         </tr>
         
-
+         <tr class="conftext[{cycle}]">
+         <td valign="middle">
+			<input type=text class="txt" name=confstrs[v6c_Logourl] value="[{$confstrs.v6c_Logourl}]" [{ $readonly}]>
+			[{ oxinputhelp ident="ECS_HELP_LOGOURL" }]
+         </td>
+         <td valign="middle" width="100%" >
+            [{ oxmultilang ident="ECS_LOGOURL" }]
+         </td>
+        </tr>
+        
         
 		<!-- Forcing width of first column -->
         <tr>
