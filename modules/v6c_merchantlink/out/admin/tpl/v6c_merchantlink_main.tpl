@@ -154,6 +154,17 @@
          </td>
         </tr>
 
+                 <tr class="conftext[{cycle}]">
+         <td valign="middle">
+            <input type=hidden name=confbools[v6c_Sideb] value=false>
+            <input type=checkbox name=confbools[v6c_Sideb] value=true  [{if ($confbools.v6c_Sideb)}]checked[{/if}] [{ $readonly }]>
+            [{ oxinputhelp ident="ECS_HELP_SIDEB" }]
+         </td>
+         <td valign="middle" width="100%">
+          [{ oxmultilang ident="ECS_SIDEB" }]
+         </td>
+        </tr>
+                
          <tr class="conftext[{cycle}]">
          <td valign="middle">
             <input type=hidden name=confbools[v6c_Login] value=false>
@@ -165,6 +176,39 @@
          </td>
         </tr>
 
+         <tr class="conftext[{cycle}]">
+         <td valign="middle">
+            <input type=hidden name=confbools[v6c_Allnote] value=false>
+            <input type=checkbox name=confbools[v6c_Allnote] value=true  [{if ($confbools.v6c_Allnote)}]checked[{/if}] [{ $readonly }]>
+            [{ oxinputhelp ident="ECS_HELP_ALLNOTE" }]
+         </td>
+         <td valign="middle" width="100%">
+          [{ oxmultilang ident="ECS_ALLNOTE" }]
+         </td>
+        </tr>
+        
+         <tr class="conftext[{cycle}]">
+         <td valign="middle">
+            <input type=hidden name=confbools[v6c_Brandname] value=false>
+            <input type=checkbox name=confbools[v6c_Brandname] value=true  [{if ($confbools.v6c_Brandname)}]checked[{/if}] [{ $readonly }]>
+            [{ oxinputhelp ident="ECS_HELP_BRANDNAME" }]
+         </td>
+         <td valign="middle" width="100%">
+          [{ oxmultilang ident="ECS_BRANDNAME" }]
+         </td>
+        </tr>
+        
+         <tr class="conftext[{cycle}]">
+         <td valign="middle">
+			<input type=text class="txt" name=confstrs[v6c_Logourl] value="[{$confstrs.v6c_Logourl}]" [{ $readonly}]>
+			[{ oxinputhelp ident="ECS_HELP_LOGOURL" }]
+         </td>
+         <td valign="middle" width="100%" >
+            [{ oxmultilang ident="ECS_LOGOURL" }]
+         </td>
+        </tr>
+        
+        
 		<!-- Forcing width of first column -->
         <tr>
          <td valign="middle" class="nowrap">

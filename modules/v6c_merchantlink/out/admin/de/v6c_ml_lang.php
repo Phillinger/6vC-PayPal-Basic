@@ -41,5 +41,11 @@ $aLang = array(
 'V6C_PAYPALSBNVPPWD'					=> 'Sandbox PayPal API Passwort (optional).',
 'V6C_PAYPALSBNVPSIG'					=> 'Sandbox PayPal API Signatur (optional).',
 
-'ECS_LANDING'					        => 'PayPal-Landingpage (aktiv: PayPal-Login, inaktiv: Gastzahlung)',
+'ECS_LANDING'					        => 'PayPal-Landingpage wählen (aktiv: PayPal-Login, inaktiv: Gastzahlung)',
+'ECS_ALLNOTE'					        => 'Kunden-Notiz in PayPal an den Händler erlauben',
+'ECS_BRANDNAME'					        => 'Eigenen Firmen- oder Shopnamen im PayPal-Portal anzeigen (aktiv: Firmenname, inaktiv: Shopname)',
+'ECS_SIDEB'					            => 'PayPal-Logo in der Sidebar anzeigen',
+'ECS_LOGOURL'					        => 'URL für Firmenlogo hier eintragen (zB. https://www.ihrshop.de/out/azure/img/logo.png). Leer lassen wenn nicht erwünscht.',
+'ECS_HELP_LOGOURL'				        => 'Das Firmenlogo wird zu PayPal übertragen und während des Bezahlprozesses im PayPal-Portal angezeigt. Eine sichere Verbindung (https://) wird empfohlen.',
+
 );

@@ -314,12 +314,25 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
             $aQuery['CURRENCYCODE'] = $this->getConfig()->getActShopCurrencyObject()->name;
             $aQuery['NOSHIPPING'] = 1;
             $aQuery['ADDROVERRIDE'] = 1;
-            $aQuery['ALLOWNOTE'] = 0;
+            $aQuery['HDRIMG'] =  $this->getConfig()->getConfigParam('v6c_Logourl');
+                        
+            if ($this->getConfig()->getConfigParam('v6c_Allnote'))
+            {$aQuery['ALLOWNOTE'] = 1;}
+            else
+            {$aQuery['ALLOWNOTE'] = 0;}
+            
             $aQuery['SOLUTIONTYPE'] ='Sole';
+
+            if ($this->getConfig()->getConfigParam('v6c_Brandname'))
+            {$aQuery['BRANDNAME'] = oxConfig::getInstance()->getActiveShop()->oxshops__oxcompany->value; }          
+            else
+            {$aQuery['BRANDNAME'] = oxConfig::getInstance()->getActiveShop()->oxshops__oxname->value; } 
+             
             if ($this->getConfig()->getConfigParam('v6c_Login'))
             {$aQuery['LANDINGPAGE'] = 'Login';}
             else
             {$aQuery['LANDINGPAGE'] = 'Billing';}
+            
             $aLangMap = $this->getConfig()->getConfigParam('v6c_aPayPalLangMap');
             $sLang = strtoupper(oxLang::getInstance()->getLanguageAbbr());
             if (isset($aLangMap[$sLang])) $aQuery['LOCALECODE'] = $aLangMap[$sLang];
@@ -329,8 +342,8 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
             $oCountry->load($oUser->oxuser__oxcountryid->value);
             if(!oxConfig::getInstance()->isUtf()) { 
             $aQuery['SHIPTONAME'] = utf8_encode($oUser->oxuser__oxfname->rawValue.' '.$oUser->oxuser__oxlname->rawValue);
-            $aQuery['SHIPTOSTREET'] = utf8_encode($oUser->oxuser__oxstreet->rawValue);
-            $aQuery['SHIPTOSTREET2'] = utf8_encode($oUser->oxuser__oxaddinfo->rawValue);
+            $aQuery['SHIPTOSTREET'] = utf8_encode($oUser->oxuser__oxstreet->rawValue.' '.$oUser->oxuser__oxstreetnr->rawValue);
+            //$aQuery['SHIPTOSTREET2'] = utf8_encode($oUser->oxuser__oxaddinfo->rawValue);
             $aQuery['SHIPTOCITY'] = utf8_encode($oUser->oxuser__oxcity->rawValue);
             $aQuery['SHIPTOSTATE'] = $oUser->oxuser__oxstateid->value;
             $aQuery['SHIPTOZIP'] = $oUser->oxuser__oxzip->value;
@@ -339,8 +352,8 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
             $aQuery['EMAIL'] = utf8_encode($oUser->oxuser__oxusername->value);
         	} else { 
         	$aQuery['SHIPTONAME'] = $oUser->oxuser__oxfname->rawValue.' '.$oUser->oxuser__oxlname->rawValue;
-            $aQuery['SHIPTOSTREET'] = $oUser->oxuser__oxstreet->rawValue;
-            $aQuery['SHIPTOSTREET2'] = $oUser->oxuser__oxaddinfo->rawValue;
+            $aQuery['SHIPTOSTREET'] = $oUser->oxuser__oxstreet->rawValue.' '.$oUser->oxuser__oxstreetnr->rawValue;
+            //$aQuery['SHIPTOSTREET2'] = $oUser->oxuser__oxaddinfo->rawValue;
             $aQuery['SHIPTOCITY'] = $oUser->oxuser__oxcity->rawValue;
             $aQuery['SHIPTOSTATE'] = $oUser->oxuser__oxstateid->value;
             $aQuery['SHIPTOZIP'] = $oUser->oxuser__oxzip->value;
