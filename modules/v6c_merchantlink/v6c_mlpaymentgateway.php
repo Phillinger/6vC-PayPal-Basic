@@ -292,7 +292,7 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
         // allow payment types that don't require init to pass check
         $res = true;
         // reset any prev results
-        oxSession::deleteVar('v6c_sPaypalXprTkn');
+        oxRegistry::get("oxSession")->deleteVariable('v6c_sPaypalXprTkn');
 
         // Init for PayPal Express
         if (strcmp($oPayment->oxpayments__v6link->value, 'v6c_paypalxpr') == 0)
@@ -324,9 +324,9 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
             $aQuery['SOLUTIONTYPE'] ='Sole';
 
             if ($this->getConfig()->getConfigParam('v6c_Brandname'))
-            {$aQuery['BRANDNAME'] = oxConfig::getInstance()->getActiveShop()->oxshops__oxcompany->value; }          
+            {$aQuery['BRANDNAME'] = oxRegistry::get("oxConfig")->getActiveShop()->oxshops__oxcompany->value; }          
             else
-            {$aQuery['BRANDNAME'] = oxConfig::getInstance()->getActiveShop()->oxshops__oxname->value; } 
+            {$aQuery['BRANDNAME'] = oxRegistry::get("oxConfig")->getActiveShop()->oxshops__oxname->value; } 
              
             if ($this->getConfig()->getConfigParam('v6c_Login'))
             {$aQuery['LANDINGPAGE'] = 'Login';}
@@ -334,13 +334,13 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
             {$aQuery['LANDINGPAGE'] = 'Billing';}
             
             $aLangMap = $this->getConfig()->getConfigParam('v6c_aPayPalLangMap');
-            $sLang = strtoupper(oxLang::getInstance()->getLanguageAbbr());
+            $sLang = strtoupper(oxRegistry::get("oxLang")->getLanguageAbbr());
             if (isset($aLangMap[$sLang])) $aQuery['LOCALECODE'] = $aLangMap[$sLang];
             // Generate user specific portion of request string (PayPal uses shipping fields to accomplish this)
             $oUser = $oBasket->getBasketUser();
             $oCountry = oxNew('oxCountry');
             $oCountry->load($oUser->oxuser__oxcountryid->value);
-            if(!oxConfig::getInstance()->isUtf()) { 
+            if(!oxRegistry::get("oxConfig")->isUtf()) { 
             $aQuery['SHIPTONAME'] = utf8_encode($oUser->oxuser__oxfname->rawValue.' '.$oUser->oxuser__oxlname->rawValue);
             $aQuery['SHIPTOSTREET'] = utf8_encode($oUser->oxuser__oxstreet->rawValue.' '.$oUser->oxuser__oxstreetnr->rawValue);
             //$aQuery['SHIPTOSTREET2'] = utf8_encode($oUser->oxuser__oxaddinfo->rawValue);
@@ -384,7 +384,7 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
             $oPrice = $oBasket->getPrice();
             // Fn provided for extensions: can modify request.
             if (method_exists($this, '_v6cInitPayExt_PreAmt')) $this->_v6cInitPayExt_PreAmt($oPrice, $sRequest);
-            if(!oxConfig::getInstance()->isUtf()) { 
+            if(!oxRegistry::get("oxConfig")->isUtf()) { 
             $sRequest .= '&DESC='.urlencode(utf8_encode(strlen($sDesc) > 120 ? substr($sDesc, 0, 117).'...' : $sDesc));   
             } else { 
             $sRequest .= '&DESC='.urlencode(strlen($sDesc) > 120 ? substr($sDesc, 0, 117).'...' : $sDesc); 
@@ -396,11 +396,11 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
             $aRet = $this->_v6cPayPalNvpRequest($sServer, $sScript, $sRequest);
             if ($aRet !== false && array_key_exists('ACK', $aRet) && strcasecmp($aRet['ACK'], 'Success') == 0)
             {
-                oxSession::setVar( 'v6c_sPaypalXprTkn', $aRet['TOKEN'] );
+                oxRegistry::get("oxSession")->setVariable( 'v6c_sPaypalXprTkn', $aRet['TOKEN'] );
                 $this->_aGatewayParms = $aRet;
                 $res = true;
             }
-            elseif ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxUtils::getInstance()->writeToLog("[".date('Y-m-d\TH:i:sP')."]\.".__CLASS__.".::".__FUNCTION__." (ln ".__LINE__.")\nNVP Init Failed! Response:\n".print_r($aRet, true)."\n\n", 'v6c_log.txt');
+            elseif ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxRegistry::get("oxUtils")->writeToLog("[".date('Y-m-d\TH:i:sP')."]\.".__CLASS__.".::".__FUNCTION__." (ln ".__LINE__.")\nNVP Init Failed! Response:\n".print_r($aRet, true)."\n\n", 'v6c_log.txt');
         }
 
         return $res;
@@ -469,7 +469,7 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 		if (!$hFsock)
 		{
 			// HTTP ERROR
-			$sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxLang::getInstance()->translateString('V6C_PAYPAL_NOCONNECT');
+			$sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxRegistry::get("oxLang")->translateString('V6C_PAYPAL_NOCONNECT');
 		} else {
 			fputs ($hFsock, $header . $req);
 			while (!feof($hFsock))
@@ -481,9 +481,9 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 				}
 				else if (strcmp ($res, "INVALID") == 0)
 				{
-					$sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxLang::getInstance()->translateString('V6C_PAYPAL_IPNINVALID');
+					$sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxRegistry::get("oxLang")->translateString('V6C_PAYPAL_IPNINVALID');
 				}
-				else $sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxLang::getInstance()->translateString('V6C_PAYPAL_IPNINVALID');
+				else $sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxRegistry::get("oxLang")->translateString('V6C_PAYPAL_IPNINVALID');
 			}
 			fclose ($hFsock);
 		}
@@ -497,7 +497,7 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 		    if (isset($_POST['custom']))
 		    {
     			$this->_aCustomParms = unserialize(stripslashes(htmlspecialchars_decode($_POST['custom'])));
-    			if (isset($this->_aCustomParms['lang']) && oxLang::getInstance()->getBaseLanguage() != $this->_aCustomParms['lang'])
+    			if (isset($this->_aCustomParms['lang']) && oxRegistry::get("oxLang")->getBaseLanguage() != $this->_aCustomParms['lang'])
     				$this->_v6cChangeShopLang($this->_aCustomParms['lang']);
 		    }
 		} else {
@@ -534,16 +534,16 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 			{
 				$sEmail = $this->_v6cIsTestMode() ? $this->getConfig()->getConfigParam('v6c_sPayPalTstEmail') : $this->getConfig()->getConfigParam('v6c_sPayPalEmail');
 				if ( strcmp(strtolower($aData['receiver_email']), strtolower($sEmail)) != 0 )
-					$sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxLang::getInstance()->translateString('V6C_PAYPAL_BADID');
+					$sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxRegistry::get("oxLang")->translateString('V6C_PAYPAL_BADID');
 			}
 			else
 			{
-			$sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxLang::getInstance()->translateString('V6C_PAYPAL_UNKWNRQ');
+			$sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxRegistry::get("oxLang")->translateString('V6C_PAYPAL_UNKWNRQ');
 			}
 		}
 		else
 		{
-			$sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxLang::getInstance()->translateString('V6C_PAYPAL_MISSINGPARMS');
+			$sErr = __CLASS__."::".__FUNCTION__." (ln ".__LINE__."): " . oxRegistry::get("oxLang")->translateString('V6C_PAYPAL_MISSINGPARMS');
 		}
 
 		return $sErr;
@@ -571,12 +571,12 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 	{
 			// Change lang for all new objects
 			$_POST['lang'] = (string)$iLang;
-			oxLang::getInstance()->resetBaseLanguage();
-			oxUtilsObject::getInstance()->resetInstanceCache();
+			oxRegistry::get("oxLang")->resetBaseLanguage();
+			oxRegistry::get("oxUtilsObject")->resetInstanceCache();
 
 			// Reset lang for existing (static) objects, particularly those we know will be used
 			// such as for order emails.
-			oxConfig::getInstance()->getActiveShop(); // 'get' triggers lang reset
+			oxRegistry::get("oxConfig")->getActiveShop(); // 'get' triggers lang reset
 	}
 
 	/**
@@ -601,7 +601,7 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 	    }
 	    if ($sResponse !== false)
 	    {
-	        if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxUtils::getInstance()->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__.".::".__FUNCTION__." (ln ".__LINE__.")\nResponse:\n$sResponse\n\n", 'v6c_log.txt');
+	        if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxRegistry::get("oxUtils")->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__.".::".__FUNCTION__." (ln ".__LINE__.")\nResponse:\n$sResponse\n\n", 'v6c_log.txt');
 	        $aResponse = explode('&', $sResponse);
 	        foreach ($aResponse as $key => $val)
 	        {
@@ -632,8 +632,8 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 	    $hCurl = @curl_init();
 	    if (!$hCurl)
 	    {
-	        oxUtilsView::getInstance()->addErrorToDisplay('PayPal Express Error: cURL request connection failed');
-	        if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxUtils::getInstance()->writeToLog("[".date('Y-m-d\TH:i:sP')."]\.".__CLASS__.".::".__FUNCTION__." (ln ".__LINE__.")\ncURL request connection failed to init\n\n", 'v6c_log.txt');
+	        oxRegistry::get("oxUtilsView")->addErrorToDisplay('PayPal Express Error: cURL request connection failed');
+	        if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxRegistry::get("oxUtils")->writeToLog("[".date('Y-m-d\TH:i:sP')."]\.".__CLASS__.".::".__FUNCTION__." (ln ".__LINE__.")\ncURL request connection failed to init\n\n", 'v6c_log.txt');
 	    }
 	    else
 	    {
@@ -641,7 +641,7 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 	        {
 	            $sLog = "[".date('Y-m-d\TH:i:sP')."]\nv6c_mlPaymentGateway::".__FUNCTION__." (ln ".__LINE__.")\ncURL request connection successful\nRequest:\n";
 	            $sLog .= $sBody."\n\n";
-	            oxUtils::getInstance()->writeToLog($sLog, 'v6c_log.txt');
+	            oxRegistry::get("oxUtils")->writeToLog($sLog, 'v6c_log.txt');
 	        }
 	        @curl_setopt($hCurl, CURLOPT_TIMEOUT, 30);
 	        @curl_setopt($hCurl, CURLOPT_URL, 'https://'.$sUrl);
@@ -655,10 +655,10 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 	        $bResult = @curl_exec($hCurl);
 	        if (!$bResult)
 	        {
-	            oxUtilsView::getInstance()->addErrorToDisplay('PayPal Express: cURL request returned bad result. Error: ' . curl_error($hCurl));
-	            if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxUtils::getInstance()->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\ncURL request returned bad result! Error: ".curl_error($hCurl)."\n\n", 'v6c_log.txt');
+	            oxRegistry::get("oxUtilsView")->addErrorToDisplay('PayPal Express: cURL request returned bad result. Error: ' . curl_error($hCurl));
+	            if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxRegistry::get("oxUtils")->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\ncURL request returned bad result! Error: ".curl_error($hCurl)."\n\n", 'v6c_log.txt');
 	        }
-	        elseif ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxUtils::getInstance()->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\ncURL request returned good result\n\n", 'v6c_log.txt');
+	        elseif ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxRegistry::get("oxUtils")->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\ncURL request returned good result\n\n", 'v6c_log.txt');
 	        @curl_close($hCurl);
 	    }
 	    return (isset($bResult) ? $bResult : false);
@@ -678,13 +678,13 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 	    $hFsock = @fsockopen('ssl://'.$sHost, 443, $errno, $errstr, 4);
 	    if (!$hFsock)
 	    {
-	        oxUtilsView::getInstance()->addErrorToDisplay('PayPal Express Error: fsockopen request connection failed');
-	        if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxUtils::getInstance()->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\nfsockopen request connection failed\n\n", 'v6c_log.txt');
+	        oxRegistry::get("oxUtilsView")->addErrorToDisplay('PayPal Express Error: fsockopen request connection failed');
+	        if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxRegistry::get("oxUtils")->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\nfsockopen request connection failed\n\n", 'v6c_log.txt');
 	    }
 	    else
 	    {
 	        $sHeader = $this->_v6cGenerateHeader($sHost, $sPath, strlen($sBody));
-	        if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxUtils::getInstance()->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\nfsockopen request connection successful\nRequest:\n".$sHeader.$sBody."\n\n", 'v6c_log.txt');
+	        if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxRegistry::get("oxUtils")->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\nfsockopen request connection successful\nRequest:\n".$sHeader.$sBody."\n\n", 'v6c_log.txt');
 	        @fputs($hFsock, $sHeader.$sBody);
 	        $sTmp = '';
 	        $isHdrDone = false;
@@ -698,10 +698,10 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 	        $bResult = $sTmp;
 	        if (!$bResult)
 	        {
-	            oxUtilsView::getInstance()->addErrorToDisplay('PayPal Express Error: fsockopen request returned bad result');
-	            if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxUtils::getInstance()->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\nfsockopen request returned bad result\n\n", 'v6c_log.txt');
+	            oxRegistry::get("oxUtilsView")->addErrorToDisplay('PayPal Express Error: fsockopen request returned bad result');
+	            if ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxRegistry::get("oxUtils")->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\nfsockopen request returned bad result\n\n", 'v6c_log.txt');
 	        }
-	        elseif ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxUtils::getInstance()->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\nfsockopen request returned good result\n\n", 'v6c_log.txt');
+	        elseif ( $this->getConfig()->getConfigParam( 'iDebug' ) != 0 ) oxRegistry::get("oxUtils")->writeToLog("[".date('Y-m-d\TH:i:sP')."]\n".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\nfsockopen request returned good result\n\n", 'v6c_log.txt');
 	    }
 	    return (isset($bResult) ? $bResult : false);
 	}
@@ -733,8 +733,9 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 	*/
 	public function v6c_paypalxpr_ProcessQueryStr()
 	{
-	    $sPayerId = oxConfig::getParameter('PayerID');
-	    if (isset($sPayerId)) oxSession::setVar('v6cPaypalxprPayerId', $sPayerId);
+        $oConf = oxRegistry::getConfig();
+	    $sPayerId = $oConf->getRequestParameter('PayerID');
+	    if (isset($sPayerId)) oxRegistry::get('oxSession')->setVariable('v6cPaypalxprPayerId', $sPayerId);
 	}
 
 	/**
@@ -744,7 +745,7 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 	*/
 	protected function _v6c_paypalxpr_GetPayerId()
 	{
-	    return oxSession::getVar('v6cPaypalxprPayerId');
+	    return oxRegistry::get('oxSession')->getVariable('v6cPaypalxprPayerId');
 	}
 
 	/**
@@ -767,7 +768,7 @@ class v6c_mlPaymentGateway extends v6c_mlPaymentGateway_parent
 	    $bRes = true;
 	    $this->_blActive = true;
 	    // Make sure token is available
-	    $sToken = oxSession::getVar('v6c_sPaypalXprTkn');
+	    $sToken = oxRegistry::get('oxSession')->getVariable('v6c_sPaypalXprTkn');
 	    if (!isset($sToken))
 	    {
 	        $this->_iLastErrorNo = __LINE__;

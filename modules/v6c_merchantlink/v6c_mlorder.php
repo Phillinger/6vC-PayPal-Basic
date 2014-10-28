@@ -69,10 +69,10 @@ class v6c_mlOrder extends v6c_mlOrder_parent
      *
      * @return bool
      */
-    protected function _sendOrderByEmail( oxUser $oUser, oxbasket $oBasket, oxUserPayment $oUsrPayment )
-    {
-    	return parent::_sendOrderByEmail($oUser,$oBasket,$oUsrPayment);
-    }
+//    protected function _sendOrderByEmail( oxUser $oUser, oxBasket $oBasket, oxUserPayment $oUsrPayment )
+//    {
+//    	return parent::_sendOrderByEmail($oUser,$oBasket,$oUsrPayment);
+//    }
 
 
 	/////////////////////// EXTENSIONS ////////////////////////////
@@ -148,7 +148,7 @@ class v6c_mlOrder extends v6c_mlOrder_parent
             elseif (strcasecmp($sPayStatus, 'Completed') == 0)
                 $this->_v6cSaveAsComplete($oGateway->v6cGetGatewayOrderId());
             else //TODO: translate
-                oxUtilsView::getInstance()->addErrorToDisplay('Merchant gateway reported an unknown payment status.');
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay('Merchant gateway reported an unknown payment status.');
         }
 
         // add gateway parms to userpayment
@@ -224,7 +224,7 @@ class v6c_mlOrder extends v6c_mlOrder_parent
     protected function _v6cSaveAsComplete($sGatewayOrderId, $bPending = false)
     {
         $oDb = oxDb::getDb();
-        $sDate = date( 'Y-m-d H:i:s', oxUtilsDate::getInstance()->getTime() );
+        $sDate = date( 'Y-m-d H:i:s', oxRegistry::get("oxUtilsDate")->getTime() );
         $sQ = 	'update oxorder set oxtransstatus='.$oDb->quote( ($bPending ? 'PENDING' : 'OK') ).
         		', oxfolder='.$oDb->quote( 'ORDERFOLDER_NEW' ).
         		', oxtransid='.$oDb->quote( $sGatewayOrderId ).
@@ -259,7 +259,7 @@ class v6c_mlOrder extends v6c_mlOrder_parent
     public function v6cSetAsPaid()
     {
         $oDb = oxDb::getDb();
-        $sDate = date( 'Y-m-d H:i:s', oxUtilsDate::getInstance()->getTime() );
+        $sDate = date( 'Y-m-d H:i:s', oxRegistry::get("oxUtilsDate")->getTime() );
         $sQ = 	'update oxorder set oxtransstatus='.$oDb->quote('OK').
     			', oxpaid='.$oDb->quote( $sDate ).
         		' where oxid='.$oDb->quote( $this->getId() );

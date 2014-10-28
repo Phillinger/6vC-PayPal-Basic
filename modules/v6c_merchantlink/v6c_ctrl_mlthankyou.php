@@ -48,8 +48,8 @@ class v6c_ctrl_mlThankYou extends v6c_ctrl_mlThankYou_parent
     	else
     	{
     	    // Do not want any errors to show to user.
-    	    $aErrors = oxSession::getVar( 'Errors' );
-    	    oxSession::deleteVar('Errors');
+    	    $aErrors = oxRegistry::get('oxSession')->getVariable( 'Errors' );
+    	    oxRegistry::get('oxSession')->deleteVariable('Errors');
 
     		oxUBase::render();
 
@@ -58,8 +58,8 @@ class v6c_ctrl_mlThankYou extends v6c_ctrl_mlThankYou_parent
 
 	        if ( !$oUser || !$oUser->oxuser__oxpassword->value)
 	        {
-                oxSession::deleteVar( 'usr' );
-                oxSession::deleteVar( 'dynvalue' );
+                oxRegistry::get('oxSession')->deleteVariable( 'usr' );
+                oxRegistry::get('oxSession')->deleteVariable( 'dynvalue' );
             }
 	        // END ADOPTED CODE
 
@@ -79,11 +79,11 @@ class v6c_ctrl_mlThankYou extends v6c_ctrl_mlThankYou_parent
             $sErr .= "\n";
 	    	// notify admin of error
     		$oxEmail = oxNew( 'oxemail' );
-    		$oShop = oxConfig::getInstance()->getActiveShop();
+    		$oShop = oxRegistry::get("oxConfig")->getActiveShop();
     		if ( !$oxEmail->sendEmail($oShop->oxshops__oxowneremail->value, "Order Confirmation Failed", $sErr) )
     		{
     			// resort to log file...
-    			oxUtils::getInstance()->writeToLog($sErr, 'v6c_log.txt');
+    			oxRegistry::get("oxUtils")->writeToLog($sErr, 'v6c_log.txt');
     		}
 
     		// Flag for display of user-friendly msg

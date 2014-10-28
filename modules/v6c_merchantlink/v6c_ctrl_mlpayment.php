@@ -75,12 +75,13 @@ class v6c_ctrl_mlPayment extends v6c_ctrl_mlPayment_parent
     */
     public function validatePayment()
     {
-        $ret = parent::validatePayment();
+        $ret    = parent::validatePayment();
+        $oConf  = oxRegistry::getConfig();
 
         if ($ret == 'order')
         {
             // Check if payment type is linked and integrated into checkout
-            if (!($sPaymentId = oxConfig::getParameter( 'paymentid' ))) $sPaymentId = oxSession::getVar('paymentid');
+            if (!($sPaymentId = $oConf->getRequestParameter( 'paymentid' ))) $sPaymentId = oxRegistry::get('oxSession')->getVariable('paymentid');
             $oPayment = oxNew( 'oxpayment' );
             $oPayment->load( $sPaymentId );
             if ($oPayment->v6cIsLinkedGateway())
@@ -107,7 +108,7 @@ class v6c_ctrl_mlPayment extends v6c_ctrl_mlPayment_parent
     */
     public function v6cHaveLnkPayInfo()
     {
-        if (oxSession::getVar('v6c_bHaveLnkPayInfo') === true) return true;
+        if (oxRegistry::get('oxSession')->getVariable('v6c_bHaveLnkPayInfo') === true) return true;
         else return false;
     }
 }

@@ -23,11 +23,11 @@ class v6c_RedirectPost extends oxUBase
             $oPayment   = oxNew( 'oxpayment' );
 
             if ( $sPaymentid && $oPayment->load( $sPaymentid ) &&
-                $oPayment->isValidPayment( oxSession::getVar( 'dynvalue' ),
+                $oPayment->isValidPayment( oxRegistry::get("oxSession")->getVariable( 'dynvalue' ),
                                            $this->getConfig()->getShopId(),
                                            $oUser,
                                            $oBasket->getPriceForPayment(),
-                                           oxSession::getVar( 'sShipSet' ) ) ) {
+                                           oxRegistry::get("oxSession")->getVariable( 'sShipSet' ) ) ) {
                 $this->_oPayment = $oPayment;
             }
         }
@@ -63,7 +63,7 @@ class v6c_RedirectPost extends oxUBase
 
         // Check for agreement to terms and conditions, if applicable
         if ( !oxConfig::getParameter( 'ord_agb' ) && $myConfig->getConfigParam( 'blConfirmAGB' ) ) {
-            //oxUtils::getInstance()->redirect($this->getConfig()->getShopHomeURL().'cl=order&fnc=execute&ord_agb=0&stoken='.oxConfig::getParameter('stoken'));
+            //oxRegistry::get("oxUtils")->redirect($this->getConfig()->getShopHomeURL().'cl=order&fnc=execute&ord_agb=0&stoken='.oxConfig::getParameter('stoken'));
             if ($this->getConfig()->getConfigParam( 'v6c_blCompactChkOut' ))
                 return 'v6c_ctrl_Options?fnc=execute&ord_agb=0&stoken='.oxConfig::getParameter('stoken');
             else
@@ -83,14 +83,14 @@ class v6c_RedirectPost extends oxUBase
 
         // Check for agreement to terms and conditions, if applicable
         if (!$this->v6cIsIntegratedLink() && !oxConfig::getParameter( 'ord_agb' ) && $myConfig->getConfigParam( 'blConfirmAGB' ) ) {
-            //oxUtils::getInstance()->redirect($this->getConfig()->getShopHomeURL().'cl=order&fnc=execute&ord_agb=0&stoken='.oxConfig::getParameter('stoken'));
+            //oxRegistry::get("oxUtils")->redirect($this->getConfig()->getShopHomeURL().'cl=order&fnc=execute&ord_agb=0&stoken='.oxConfig::getParameter('stoken'));
             if ($this->getConfig()->getConfigParam( 'v6c_blCompactChkOut' ))
             {
                 // Do nothing, checked by v6c_ctrl_Options.
             }
             else
             {
-                oxUtils::getInstance()->redirect($this->getConfig()->getShopHomeURL().'cl=order&fnc=execute&ord_agb=0&stoken='.oxConfig::getParameter('stoken'));
+                oxRegistry::get("oxUtils")->redirect($this->getConfig()->getShopHomeURL().'cl=order&fnc=execute&ord_agb=0&stoken='.oxConfig::getParameter('stoken'));
                 return; //'order?fnc=execute&ord_agb=0&stoken='.oxConfig::getParameter('stoken');
             }
         }
@@ -106,14 +106,14 @@ class v6c_RedirectPost extends oxUBase
             $oBasket = $this->getBasket();
             if ($oPaymentGateway->v6cInitPayment($oPayment,$oBasket) === false)
             {
-                $this->_v6cSetError(oxLang::getInstance()->translateString('V6C_PAGE_CHECKOUT_PAYMENT_ERRINIT'));
+                $this->_v6cSetError(oxRegistry::get("oxLang")->translateString('V6C_PAGE_CHECKOUT_PAYMENT_ERRINIT'));
             }
             else $aGatewayParms = $oPaymentGateway->v6cGetGatewayParms();
         }
 
         // Make sure post URL is available
         $sPostUrl = $oPaymentGateway->v6cGetGatewayUrl($oPayment);
-        if ($sPostUrl === false) $this->_v6cSetError(oxLang::getInstance()->translateString('V6C_PAGE_CHECKOUT_PAYMENT_ERRNOURL'));
+        if ($sPostUrl === false) $this->_v6cSetError(oxRegistry::get("oxLang")->translateString('V6C_PAGE_CHECKOUT_PAYMENT_ERRNOURL'));
         else $this->_v6c_sPostUrl = $sPostUrl;
 
         // Don't show mini baskets
@@ -247,7 +247,7 @@ class v6c_RedirectPost extends oxUBase
 	{
 	    $this->_v6c_bAutoPost = false;
 	    $this->_v6c_bCancel = true;
-	    oxUtilsView::getInstance()->addErrorToDisplay( oxLang::getInstance()->translateString('V6C_PAGE_CHECKOUT_PAYMENT_USRCANCEL') );
+	    oxRegistry::get("oxUtilsView")->addErrorToDisplay( oxRegistry::get("oxLang")->translateString('V6C_PAGE_CHECKOUT_PAYMENT_USRCANCEL') );
 	}
 
 	/**
@@ -261,6 +261,6 @@ class v6c_RedirectPost extends oxUBase
 	{
 	    $this->_v6c_bAutoPost = false;
 	    $this->_v6c_bErr = true;
-	    oxUtilsView::getInstance()->addErrorToDisplay( $sErrMsgd );
+	    oxRegistry::get("oxUtilsView")->addErrorToDisplay( $sErrMsgd );
 	}
 }

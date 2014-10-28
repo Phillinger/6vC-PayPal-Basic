@@ -13,7 +13,7 @@ class v6c_hPayPalIpn extends oxUBase
 		try { $oPaymentGateway->v6cValidateNotification(v6c_mlPaymentGateway::V6C_ML_PAYPAL_IPN); }
 		catch (Exception $oEx)
 		{
-			oxUtils::getInstance()->writeToLog("[".date('Y-m-d\TH:i:sP')."] ".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\n    ".$oEx->getMessage()."\n", 'v6c_log.txt');
+			oxRegistry::get("oxUtils")->writeToLog("[".date('Y-m-d\TH:i:sP')."] ".__CLASS__."::".__FUNCTION__." (ln ".__LINE__.")\n    ".$oEx->getMessage()."\n", 'v6c_log.txt');
 			return;
 		}
 
@@ -38,7 +38,7 @@ class v6c_hPayPalIpn extends oxUBase
     	    $oOrder->v6cSetAsPaid();
     	    // Notify admin
     	    $oxEmail = oxNew( 'oxemail' );
-    	    $oShop = oxConfig::getInstance()->getActiveShop();
+    	    $oShop = oxRegistry::get("oxConfig")->getActiveShop();
     	    $sMsg = "Order #".$oOrder->oxorder__oxordernr->value." has been paid and it's status changed from 'PENDING' to 'OK'";
     	    $oxEmail->sendEmail($oShop->oxshops__oxowneremail->value, "Order #".$oOrder->oxorder__oxordernr->value." Paid", $sMsg);
     	}

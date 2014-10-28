@@ -43,8 +43,8 @@
 					[{/foreach}]
 				[{/if}]
                 <div class="lineBox clear">
-                	<a href="[{ oxgetseourl ident=$oViewConf->getPaymentLink() }]" class="btn previous prevStep submitButton largeButton">[{ oxmultilang ident="PAGE_CHECKOUT_ORDER_BACKSTEP" }]</a>
-                    <button type="submit" class="btn submitButton nextStep largeButton">[{if $oView->v6cIsIntegratedLink() }][{ oxmultilang ident="V6C_PAGE_CHECKOUT_REDIRECT_CONTBTN" }][{else}][{ oxmultilang ident="PAGE_CHECKOUT_ORDER_SUBMITORDER" }][{/if}]</button>
+                	<a href="[{ oxgetseourl ident=$oViewConf->getPaymentLink() }]" class="btn previous prevStep submitButton largeButton">[{ oxmultilang ident="PREVIOUS_STEP" }]</a>
+                    <button type="submit" class="btn submitButton nextStep largeButton">[{if $oView->v6cIsIntegratedLink() }][{ oxmultilang ident="V6C_PAGE_CHECKOUT_REDIRECT_CONTBTN" }][{else}][{ oxmultilang ident="CONTINUE_TO_NEXT_STEP" }][{/if}]</button>
                 </div>
             </form>
         [{/block}]
@@ -66,7 +66,7 @@
 							[{/foreach}]
 						[{/if}]
 		                <div class="lineBox clear">
-		                    <button type="submit" class="submitButton nextStep largeButton">[{if $oView->v6cIsIntegratedLink() }][{ oxmultilang ident="V6C_PAGE_CHECKOUT_REDIRECT_CONTBTN" }][{else}][{ oxmultilang ident="PAGE_CHECKOUT_ORDER_SUBMITORDER" }][{/if}]</button>
+		                    <button type="submit" class="submitButton nextStep largeButton">[{if $oView->v6cIsIntegratedLink() }][{ oxmultilang ident="V6C_PAGE_CHECKOUT_REDIRECT_CONTBTN" }][{else}][{ oxmultilang ident="CONTINUE_TO_NEXT_STEP" }][{/if}]</button>
 		                </div>
 		            </form>
 		        [{/block}]

@@ -34,16 +34,6 @@
 
         <tr class="conftext[{cycle}]">
          <td valign="middle">
-            <input type="submit" class="confinput" name="save" value="[{ oxmultilang ident="V6C_INSTALL" }]" onClick="Javascript:document.myedit.fnc.value='v6cInstallML'" [{ $readonly }] [{$v6c_sMlInstalled}]>
-            [{ oxinputhelp ident="V6C_HELP_INSTLMERCKLNK" }]
-         </td>
-         <td valign="middle" width="100%" >
-            [{ oxmultilang ident="V6C_INSTLMERCKLNK" }]
-         </td>
-        </tr>
-
-        <tr class="conftext[{cycle}]">
-         <td valign="middle">
 			<textarea class="txtfield" name=confaarrs[v6c_aPayPalLangMap] [{ $readonly }]>[{$confaarrs.v6c_aPayPalLangMap}]</textarea>
 			[{ oxinputhelp ident="V6C_HELP_PAYPALLANGMAP" }]
          </td>

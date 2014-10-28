@@ -153,8 +153,8 @@ class v6c_mlPayment extends v6c_mlPayment_parent
 	protected function _v6cGetPayPalParms($aExtraVars = null)
 	{
 		// init vars
-		$oBasket = oxSession::getInstance()->getBasket();
-		if ($oBasket === null) throw new Exception(oxLang::getInstance()->translateString('V6C_ORDER_ERRBADSESSION'));
+		$oBasket = oxRegistry::get("oxSession")->getBasket();
+		if ($oBasket === null) throw new Exception(oxRegistry::get("oxLang")->translateString('V6C_ORDER_ERRBADSESSION'));
 
 		$aParms = array('cmd' => '_cart', 'upload' => '1');
 
@@ -163,7 +163,7 @@ class v6c_mlPayment extends v6c_mlPayment_parent
 		 */
 		$aParms['business'] = $this->_v6cIsTestMode() ? $this->getConfig()->getConfigParam('v6c_sPayPalTstId') : $this->getConfig()->getConfigParam('v6c_sPayPalId');
 		$aParms['currency_code'] = $this->getConfig()->getActShopCurrencyObject()->name;
-		$aParms['item_name_1'] = oxLang::getInstance()->translateString('V6C_ORDER_ITEMNAME');
+		$aParms['item_name_1'] = oxRegistry::get("oxLang")->translateString('V6C_ORDER_ITEMNAME');
 		$aParms['amount_1'] = (string)$oBasket->getPrice()->getBruttoPrice();
 
 		/*
@@ -171,7 +171,7 @@ class v6c_mlPayment extends v6c_mlPayment_parent
 		 * 	- lang is maintained for order emails.
 		 * 	- orderID passed in as ExtraVar once set
 		 */
-		$aInfo = array('lang' => oxLang::getInstance()->getBaseLanguage());
+		$aInfo = array('lang' => oxRegistry::get("oxLang")->getBaseLanguage());
 		if (isset($aExtraVars))
 		{
 			if (is_array($aExtraVars))
@@ -217,7 +217,7 @@ class v6c_mlPayment extends v6c_mlPayment_parent
 		* Set other optional parms, including language
 		*/
 		$aLangMap = $this->getConfig()->getConfigParam('v6c_aPayPalLangMap');
-		$sLang = strtoupper(oxLang::getInstance()->getLanguageAbbr());
+		$sLang = strtoupper(oxRegistry::get("oxLang")->getLanguageAbbr());
 		if (isset($aLangMap[$sLang])) $aParms['lc'] = $aLangMap[$sLang];
 		// Hide all shipping info since this is handled by eShop.
 		$aParms['no_note'] = 1;
